@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# YOOH Technologies — Website
 
-## Getting Started
+Next.js 15 (App Router) · React 19 · TypeScript · Tailwind CSS v4 · GSAP + ScrollTrigger + SplitText · Lenis · Lucide
 
-First, run the development server:
+## Run
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000
+npm run build && npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Where to edit content
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| What | File |
+| --- | --- |
+| Site name, URL, contact details, social links | `src/lib/site.ts` |
+| Services (6) and their detail-page content | `src/lib/services.ts` |
+| Portfolio projects | `src/lib/projects.ts` |
+| Brand colours, fonts, textures | `src/app/globals.css` (`@theme`) |
+| Images | `public/images/` (cropped from `../gallery`) |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Contact details and social URLs are empty on purpose — anything left blank is hidden.
+The portfolio only contains YOOH's own brand work from the gallery plus one
+"next case study" placeholder; no clients, testimonials or statistics are invented.
 
-## Learn More
+## Environment variables
 
-To learn more about Next.js, take a look at the following resources:
+| Variable | Purpose |
+| --- | --- |
+| `NEXT_PUBLIC_SITE_URL` | Production URL used for canonical links, sitemap and Open Graph (default `https://yooh.tech`) |
+| `RESEND_API_KEY` | Enables contact-form email delivery via resend.com |
+| `CONTACT_TO_EMAIL` | Inbox that receives enquiries |
+| `CONTACT_FROM_EMAIL` | Verified sender (optional) |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Without the Resend variables the form validates and logs enquiries in development,
+and returns a clear "being set up" message in production so no lead is silently lost.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Brand palette (sampled from the gallery artwork)
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Pink `#FC90B5` · Forest green `#305429` · Moss `#4A7236` · Lime `#D7F841` ·
+Ink `#050505` · Concrete `#9C9A95` · Paper `#EDE9DC` · Signal orange `#E4572E` (tiny accents only)
