@@ -234,3 +234,90 @@ html.motion-ok [data-hero-hide] {
     scroll-behavior: auto !important;
   }
 }
+
+/* ------------------------------------------------------------------
+   Article body (blog) — long-form reading styles in the brand type
+   ------------------------------------------------------------------ */
+@layer components {
+  .prose-yooh {
+    font-size: var(--text-lead);
+    line-height: 1.75;
+    color: color-mix(in srgb, var(--color-ink) 85%, transparent);
+  }
+  .prose-yooh > * + * {
+    margin-top: 1.25em;
+  }
+  .prose-yooh h2 {
+    font-family: var(--font-heading);
+    font-size: var(--text-h2);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--color-green);
+    margin-top: 2.2em;
+  }
+  .prose-yooh h3 {
+    font-family: var(--font-heading);
+    font-size: var(--text-h3);
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--color-ink);
+    margin-top: 1.8em;
+  }
+  .prose-yooh h2 + *,
+  .prose-yooh h3 + * {
+    margin-top: 0.75em;
+  }
+  .prose-yooh strong {
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+  .prose-yooh a {
+    color: var(--color-green);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+  }
+  .prose-yooh a:hover {
+    color: var(--color-ink);
+  }
+  .prose-yooh ul,
+  .prose-yooh ol {
+    padding-left: 1.25em;
+  }
+  .prose-yooh ul {
+    list-style: disc;
+  }
+  .prose-yooh ol {
+    list-style: decimal;
+  }
+  .prose-yooh li + li {
+    margin-top: 0.5em;
+  }
+  .prose-yooh li::marker {
+    color: var(--color-green);
+  }
+  .prose-yooh table {
+    width: 100%;
+    min-width: 32rem;
+    border-collapse: collapse;
+    font-size: var(--text-small);
+  }
+  .prose-yooh th,
+  .prose-yooh td {
+    text-align: left;
+    vertical-align: top;
+    padding: 0.75em 1em 0.75em 0;
+    border-top: 1px solid color-mix(in srgb, var(--color-ink) 15%, transparent);
+  }
+  .prose-yooh thead th {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    color: var(--color-ink);
+    border-top: 0;
+  }
+  .prose-yooh tbody th {
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+}

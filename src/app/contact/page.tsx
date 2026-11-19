@@ -7,14 +7,16 @@ import { Reveal } from "@/components/motion/Reveal";
 import { TornEdge } from "@/components/ui/Marks";
 import { site } from "@/lib/site";
 import { topics } from "@/lib/contact";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { graph, pageMetadata, webPageSchema } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Contact Us",
-  description:
-    "Start a project with YOOH Technologies. Tell us about your idea, challenge or growth goals and we'll get back to you.",
-  alternates: { canonical: "/contact" },
-  openGraph: { url: "/contact" },
-};
+const title = "Contact YOOH Technologies – Start Your Project";
+const description =
+  "Contact YOOH Technologies about a website, mobile app, AI automation, e-commerce store or digital marketing. Tell us about your project and get a clear proposal.";
+
+export const metadata: Metadata = pageMetadata({ title, description, path: "/contact", absoluteTitle: true });
+
+const jsonLd = graph(webPageSchema({ type: "ContactPage", path: "/contact", name: title, description }));
 
 export default function ContactPage() {
   const hasContact = site.contact.email || site.contact.phone || site.contact.address;
@@ -22,6 +24,7 @@ export default function ContactPage() {
 
   return (
     <>
+      <JsonLd data={jsonLd} />
       {/* Photo hero */}
       <section
         data-theme="green"

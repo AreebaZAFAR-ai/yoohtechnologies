@@ -28,10 +28,16 @@ The portfolio only contains YOOH's own brand work from the gallery plus one
 
 | Variable | Purpose |
 | --- | --- |
-| `NEXT_PUBLIC_SITE_URL` | Production URL used for canonical links, sitemap and Open Graph (default `https://yooh.tech`) |
 | `RESEND_API_KEY` | Enables contact-form email delivery via resend.com |
 | `CONTACT_TO_EMAIL` | Inbox that receives enquiries |
 | `CONTACT_FROM_EMAIL` | Verified sender (optional) |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Google Analytics 4 measurement ID (`G-XXXXXXX`). GA loads only when set |
+| `GOOGLE_SITE_VERIFICATION` | Google Search Console HTML-tag token (optional — DNS verification is preferred) |
+| `BING_SITE_VERIFICATION` | Bing Webmaster Tools `msvalidate.01` token (optional) |
+
+The canonical origin (`https://www.yoohtechnologies.com`) is fixed in `src/lib/site.ts`
+on purpose, so preview deployments can never emit a non-production canonical URL.
+SEO helpers live in `src/lib/seo.ts`; see `YOOH_SEO_GEO_IMPLEMENTATION_REPORT.md`.
 
 Without the Resend variables the form validates and logs enquiries in development,
 and returns a clear "being set up" message in production so no lead is silently lost.

@@ -135,6 +135,10 @@ export const services: Service[] = [
         q: "Who owns the ad accounts?",
         a: "You do. Campaigns run in accounts in your name, so your data and history always stay with you.",
       },
+      {
+        q: "What does your SEO service include?",
+        a: "Technical SEO (speed, indexing and site structure), on-page optimisation of titles, headings and content, and new content planned around what your customers search for — with Google Search Console and Analytics reporting so you can see what changed.",
+      },
     ],
     related: ["google-map-business", "website-development", "e-commerce"],
     glyph: "circle",
@@ -228,6 +232,14 @@ export const services: Service[] = [
       {
         q: "How long does a pilot take?",
         a: "Most pilots take two to four weeks, depending on the process and the integrations involved.",
+      },
+      {
+        q: "What is AI business automation?",
+        a: "Using software — including AI models where they help — to handle repetitive work automatically: capturing and routing leads, moving data between tools, drafting replies, summarising documents and producing reports. People stay in control of decisions that need judgment.",
+      },
+      {
+        q: "Can you automate lead generation and follow-up?",
+        a: "Yes. A common first project captures enquiries from your website, ads or forms, adds them to your CRM or spreadsheet, sends an instant reply and alerts the right person — so no lead waits days for a response.",
       },
     ],
     related: ["app-development", "website-development", "digital-marketing"],
@@ -425,6 +437,10 @@ export const services: Service[] = [
         q: "Do you help after launch?",
         a: "Yes — with ongoing support, updates and e-commerce marketing to keep sales growing.",
       },
+      {
+        q: "How much does an online store cost?",
+        a: "It depends on the platform, catalogue size, payment and shipping integrations, and any custom features. We scope it with you and give a fixed quote before building, so the cost is clear up front.",
+      },
     ],
     related: ["website-development", "digital-marketing", "ui-ux-design"],
     glyph: "node",
@@ -528,6 +544,14 @@ export const services: Service[] = [
       {
         q: "Will my website be SEO-friendly?",
         a: "Every site ships with clean structure, metadata, fast loading and a sitemap, ready for search engines.",
+      },
+      {
+        q: "How much does a business website cost?",
+        a: "It depends on the number of pages, features such as booking or online payments, and how much content we write for you. After a short call you get a fixed quote before any work starts. If you need to launch quickly on a smaller budget, a ready-made website template is a lower-cost starting point.",
+      },
+      {
+        q: "Custom website or template — which do I need?",
+        a: "A template suits a standard business site that needs to go live fast. A custom website is worth it when you need a distinctive design, specific features or integrations, or a structure planned around your services and search keywords.",
       },
     ],
     related: ["ui-ux-design", "e-commerce", "app-development"],
@@ -733,3 +757,61 @@ export const services: Service[] = [
 ];
 
 export const getService = (slug: string) => services.find((s) => s.slug === slug);
+
+/**
+ * Search metadata per service (kept apart from display copy).
+ * `title` is used as an absolute <title> (≤ 60 chars); `h1` is the keyword phrase
+ * rendered in the page's H1 eyebrow; `updated` feeds the sitemap's lastmod —
+ * change it only when the page content actually changes.
+ */
+export const serviceSeo: Record<string, { title: string; description: string; h1: string; updated: string }> = {
+  "website-development": {
+    title: "Website Development Services | YOOH Technologies",
+    description:
+      "Custom website development for businesses: fast, mobile-friendly, SEO-ready sites with an easy CMS. Business websites, landing pages, redesigns and hosting.",
+    h1: "Website Development Services",
+    updated: "2026-11-17",
+  },
+  "app-development": {
+    title: "Mobile App Development – iOS & Android | YOOH Technologies",
+    description:
+      "Custom mobile app development for iOS and Android: MVPs, cross-platform apps with React Native or Flutter, backends and admin tools — from idea to app store.",
+    h1: "Mobile App Development",
+    updated: "2026-11-17",
+  },
+  "e-commerce": {
+    title: "E-commerce Website Development | YOOH Technologies",
+    description:
+      "E-commerce website development on Shopify and WooCommerce: fast, mobile-first online stores with simple checkout, Stripe or PayPal payments and inventory sync.",
+    h1: "E-commerce Website Development",
+    updated: "2026-11-17",
+  },
+  "ui-ux-design": {
+    title: "UI/UX Design Services for Web & Mobile | YOOH Technologies",
+    description:
+      "UI/UX design for websites and mobile apps: user research, wireframes, high-fidelity UI, interactive prototypes and usability testing, ready for development.",
+    h1: "UI/UX Design Services",
+    updated: "2026-11-17",
+  },
+  "digital-marketing": {
+    title: "Digital Marketing & SEO Services | YOOH Technologies",
+    description:
+      "Digital marketing for growing businesses: SEO, Google Ads, social media marketing and content, run as one plan with conversion tracking and monthly reporting.",
+    h1: "Digital Marketing & SEO Services",
+    updated: "2026-11-17",
+  },
+  "ai-automation": {
+    title: "AI Automation Services for Businesses | YOOH Technologies",
+    description:
+      "AI automation services: business process automation, AI integrations, intelligent workflows and custom AI assistants connected to the tools you already use.",
+    h1: "AI Automation Services",
+    updated: "2026-11-17",
+  },
+  "google-map-business": {
+    title: "Google Business Profile Management | YOOH Technologies",
+    description:
+      "Google Business Profile (Google Maps) setup, verification and optimisation — categories, photos, posts and genuine review management for local search.",
+    h1: "Google Business Profile Management",
+    updated: "2026-11-17",
+  },
+};

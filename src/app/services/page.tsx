@@ -9,20 +9,36 @@ import { Label, TornEdge } from "@/components/ui/Marks";
 import { servicesFaqs } from "@/lib/site";
 import { WaysToWork } from "@/components/services/WaysToWork";
 import { FaqList } from "@/components/shared/FaqList";
-import { services } from "@/lib/services";
+import { serviceSeo, services } from "@/lib/services";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { absoluteUrl, faqSchema, graph, pageMetadata, webPageSchema } from "@/lib/seo";
 import { cn } from "@/lib/cn";
 
-export const metadata: Metadata = {
-  title: "Services",
-  description:
-    "Website and app development, UI/UX design, e-commerce, digital marketing, Google Map Business and AI & automation — seven disciplines from one team at YOOH Technologies.",
-  alternates: { canonical: "/services" },
-  openGraph: { url: "/services" },
-};
+const title = "Services: Web, Apps, AI & Marketing | YOOH Technologies";
+const description =
+  "Website and mobile app development, UI/UX design, e-commerce, digital marketing and SEO, Google Business Profile and AI automation — from one team.";
+
+export const metadata: Metadata = pageMetadata({ title, description, path: "/services", absoluteTitle: true });
+
+const jsonLd = graph(
+  webPageSchema({ type: "CollectionPage", path: "/services", name: title, description }),
+  {
+    "@type": "ItemList",
+    "@id": `${absoluteUrl("/services")}#services`,
+    itemListElement: services.map((s, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: serviceSeo[s.slug]?.h1 ?? s.title,
+      url: absoluteUrl(`/services/${s.slug}`),
+    })),
+  },
+  faqSchema("/services", servicesFaqs),
+);
 
 export default function ServicesPage() {
   return (
     <>
+      <JsonLd data={jsonLd} />
       {/* Hero */}
       <section
         data-theme="paper"
@@ -41,7 +57,8 @@ export default function ServicesPage() {
           </RevealText>
           <Reveal>
             <p data-reveal className="mx-auto mt-6 max-w-xl text-lead leading-relaxed text-ink/75">
-              Software, marketing and growth — planned together, built by one team, and measured
+              Website and app development, UI/UX design, e-commerce, digital marketing, Google
+              Business Profile and AI automation — planned together, built by one team, and measured
               against the outcomes that matter to your business.
             </p>
           </Reveal>

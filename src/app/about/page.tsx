@@ -8,14 +8,16 @@ import { Parallax } from "@/components/motion/Parallax";
 import { ButtonLink } from "@/components/ui/Button";
 import { Label, TornEdge } from "@/components/ui/Marks";
 import { principles } from "@/lib/site";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { graph, pageMetadata, webPageSchema } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "About Us",
-  description:
-    "YOOH Technologies is a multidisciplinary digital agency combining software, marketing and growth strategy to help ambitious businesses move forward.",
-  alternates: { canonical: "/about" },
-  openGraph: { url: "/about" },
-};
+const title = "About YOOH Technologies | Software & Digital Agency";
+const description =
+  "YOOH Technologies is a Pakistan-based software house: one team of engineers, designers and marketers building websites, apps, AI automation and campaigns.";
+
+export const metadata: Metadata = pageMetadata({ title, description, path: "/about", absoluteTitle: true });
+
+const jsonLd = graph(webPageSchema({ type: "AboutPage", path: "/about", name: title, description }));
 
 const pillars = [
   {
@@ -35,6 +37,7 @@ const pillars = [
 export default function AboutPage() {
   return (
     <>
+      <JsonLd data={jsonLd} />
       {/* Hero: centred title + framed photo */}
       <section
         data-theme="paper"
@@ -53,7 +56,9 @@ export default function AboutPage() {
           </RevealText>
           <Reveal>
             <p data-reveal className="mx-auto mt-6 max-w-xl text-lead leading-relaxed text-ink/75">
-              Meet the team behind YOOH Technologies.
+              YOOH Technologies is a software house based in Pakistan. One team of engineers,
+              designers and marketers helps businesses at home and abroad build, automate and grow
+              online.
             </p>
           </Reveal>
 

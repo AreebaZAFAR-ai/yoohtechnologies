@@ -11,12 +11,23 @@ export const site = {
     "We build digital experiences, develop intelligent solutions, and help businesses grow.",
   description:
     "YOOH Technologies is a multidisciplinary technology, software, digital marketing and business growth agency. Software. Marketing. Growth.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://yooh.tech",
+  /**
+   * Canonical origin (HTTPS + www, no trailing slash). Every canonical URL, the sitemap,
+   * robots.txt, Open Graph tags and JSON-LD are built from this, so it is deliberately
+   * hard-coded: an env override on a preview deployment must never leak a non-production
+   * domain into canonical tags (the old default, yooh.tech, did exactly that).
+   */
+  url: "https://www.yoohtechnologies.com",
+  /** Markets the business serves — used for schema `areaServed`. */
+  areaServed: ["Pakistan", "United States", "United Kingdom", "Canada", "Australia"],
   /** Fill these in when real details are available. */
   contact: {
-    email: "",
+    email: "yoohtechnologies@yoohtechnologies.com",
     phone: "",
-    address: "",
+    /** Shown in the footer and on the contact page. Add a city/street only if you want it public. */
+    address: "Pakistan",
+    /** ISO 3166-1 country code for schema PostalAddress. */
+    country: "PK",
   },
   socials: [
     { label: "Instagram", href: "" },
@@ -89,8 +100,40 @@ export const nav = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   { label: "Services", href: "/services" },
+  { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/contact" },
 ] as const;
+
+/**
+ * Home-page questions. Written as direct answers so search engines and AI assistants can
+ * quote them; every answer reflects what is stated elsewhere on the site — keep it that way.
+ */
+export const homeFaqs = [
+  {
+    q: "What does YOOH Technologies do?",
+    a: "YOOH Technologies is a software development and digital solutions agency. We build websites, mobile apps, online stores and custom software, automate business processes with AI, design user interfaces, and run digital marketing, SEO and Google Business Profile management — all with one team.",
+  },
+  {
+    q: "Where is YOOH Technologies based, and who do you work with?",
+    a: "YOOH Technologies is a software house based in Pakistan. We work with startups, local businesses and growing companies in Pakistan and internationally — projects run remotely with clear milestones and regular check-ins, so we can work with clients wherever they are.",
+  },
+  {
+    q: "How much does website or app development cost?",
+    a: "It depends on scope: the number of pages or screens, features, integrations and content. After a free call we send a fixed quote for fixed-scope work, so you see the cost before anything starts. Ready-made website templates are available for a faster, lower-cost launch.",
+  },
+  {
+    q: "How long does a project take?",
+    a: "A focused business website usually takes three to six weeks, and most AI automation pilots take two to four weeks. Apps and larger platforms are planned in phases. You get a timeline with your proposal.",
+  },
+  {
+    q: "What is AI business automation?",
+    a: "Using software — including AI models where they genuinely help — to handle repetitive work such as capturing and following up on leads, moving data between tools, drafting replies and producing reports, while people keep control of decisions that need judgment.",
+  },
+  {
+    q: "Do you offer support after launch?",
+    a: "Yes. Our Care & growth plans cover updates, backups, monitoring, priority fixes and monthly reporting, and we can continue with marketing and SEO once you are live.",
+  },
+];
 
 export const principles = [
   {

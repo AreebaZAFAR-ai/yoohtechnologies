@@ -6,44 +6,57 @@ import { services } from "@/lib/services";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { Analytics } from "@/components/seo/Analytics";
+import { graph, organizationSchema, websiteSchema } from "@/lib/seo";
 
 const anton = Anton({ weight: "400", subsets: ["latin"], variable: "--font-anton", display: "swap" });
 const space = Space_Grotesk({ subsets: ["latin"], variable: "--font-space", display: "swap" });
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 
+const homeTitle = `${site.name} | Software Development, AI & Digital Solutions`;
+const homeDescription =
+  "YOOH Technologies builds custom software, websites and mobile apps, AI automation, e-commerce stores and digital marketing for growing businesses worldwide.";
+
+const googleVerification = process.env.GOOGLE_SITE_VERIFICATION;
+const bingVerification = process.env.BING_SITE_VERIFICATION;
+
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} — Software. Marketing. Growth.`,
-    template: `%s — ${site.name}`,
+    default: homeTitle,
+    template: `%s | ${site.name}`,
   },
-  description: site.description,
+  description: homeDescription,
   applicationName: site.name,
-  keywords: [
-    "website development",
-    "app development",
-    "UI/UX design",
-    "e-commerce",
-    "digital marketing",
-    "Google Business Profile",
-    "AI automation",
-    "digital agency",
-  ],
+  authors: [{ name: site.name, url: site.url }],
+  creator: site.name,
+  publisher: site.name,
+  formatDetection: { telephone: false, email: false, address: false },
   openGraph: {
     type: "website",
     siteName: site.name,
-    title: `${site.name} — Software. Marketing. Growth.`,
-    description: site.description,
+    locale: "en_US",
+    title: homeTitle,
+    description: homeDescription,
     url: "/",
-    images: [{ url: "/og.jpg", width: 1200, height: 630, alt: "YOOH Technologies — Software. Marketing. Growth." }],
   },
   twitter: {
     card: "summary_large_image",
-    title: `${site.name} — Software. Marketing. Growth.`,
-    description: site.description,
-    images: ["/og.jpg"],
+    title: homeTitle,
+    description: homeDescription,
   },
-  alternates: { canonical: "/" },
+  // Indexing is the default, so no index/follow here (it would contradict the 404 page's noindex);
+  // only allow large image previews and full snippets, which help AI Overviews and Discover.
+  robots: { "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 },
+  ...(googleVerification || bingVerification
+    ? {
+        verification: {
+          ...(googleVerification ? { google: googleVerification } : {}),
+          ...(bingVerification ? { other: { "msvalidate.01": bingVerification } } : {}),
+        },
+      }
+    : {}),
 };
 
 export const viewport: Viewport = {
@@ -52,21 +65,17 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-const orgJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: site.name,
-  url: site.url,
-  logo: `${site.url}/icon.svg`,
-  slogan: site.tagline,
-  description: site.description,
-  knowsAbout: services.map((s) => s.title),
-  ...(site.contact.email ? { email: site.contact.email } : {}),
-  ...(site.contact.phone ? { telephone: site.contact.phone } : {}),
-  ...(site.socials.some((s) => s.href)
-    ? { sameAs: site.socials.filter((s) => s.href).map((s) => s.href) }
-    : {}),
-};
+/** Site-wide entity graph: one Organization + one WebSite, referenced by @id from every page. */
+const siteJsonLd = graph(
+  organizationSchema([
+    ...services.map((s) => s.title),
+    "Custom Software Development",
+    "SaaS Development",
+    "CRM and Business Integrations",
+    "Search Engine Optimization",
+  ]),
+  websiteSchema(),
+);
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
@@ -78,10 +87,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             __html: `if(window.matchMedia('(prefers-reduced-motion: no-preference)').matches)document.documentElement.classList.add('motion-ok')`,
           }}
         />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
-        />
+        <JsonLd data={siteJsonLd} />
       </head>
       <body className="antialiased">
         <a
@@ -95,6 +101,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <main id="main">{children}</main>
         <Footer />
         <div aria-hidden className="grain" />
+        <Analytics />
       </body>
     </html>
   );

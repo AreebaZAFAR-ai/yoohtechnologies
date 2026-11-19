@@ -5,8 +5,12 @@ import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/motion/Reveal";
 import { ButtonLink } from "@/components/ui/Button";
 import { FaqList } from "@/components/shared/FaqList";
-import { getService, services } from "@/lib/services";
+import { Eyebrow } from "@/components/ui/Eyebrow";
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { getService, serviceSeo, services } from "@/lib/services";
 import { engagementModels, site } from "@/lib/site";
+import { ORG_ID, absoluteUrl, breadcrumbSchema, faqSchema, graph, pageMetadata, webPageSchema } from "@/lib/seo";
 import { cn } from "@/lib/cn";
 
 type Params = { slug: string };
@@ -20,16 +24,14 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const { slug } = await params;
   const s = getService(slug);
   if (!s) return {};
-  return {
-    title: s.title,
-    description: s.summary,
-    alternates: { canonical: `/services/${s.slug}` },
-    openGraph: {
-      url: `/services/${s.slug}`,
-      title: `${s.title} — ${site.name}`,
-      description: s.summary,
-    },
-  };
+  const seo = serviceSeo[s.slug];
+  return pageMetadata({
+    title: seo?.title ?? `${s.title} Services | ${site.name}`,
+    absoluteTitle: true,
+    description: seo?.description ?? s.summary,
+    path: `/services/${s.slug}`,
+    image: `/services/${s.slug}/opengraph-image`,
+  });
 }
 
 /** Plain text followed by a green accent phrase. */
@@ -38,16 +40,6 @@ function Accent({ parts, className }: { parts: [string, string]; className?: str
     <>
       {parts[0]} <span className={cn("text-green", className)}>{parts[1]}</span>
     </>
-  );
-}
-
-/** Small uppercase eyebrow with a square marker. */
-function Eyebrow({ children, className }: { children: React.ReactNode; className?: string }) {
-  return (
-    <p className={cn("label flex items-center gap-2.5 text-ink/60", className)}>
-      <span aria-hidden className="size-2 rounded-[2px] bg-green" />
-      {children}
-    </p>
   );
 }
 
@@ -75,38 +67,43 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
     .filter((s): s is NonNullable<typeof s> => Boolean(s));
   const contactHref = `/contact?service=${service.slug}`;
 
-  const serviceJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Service",
-    name: service.title,
-    description: service.intro,
-    serviceType: service.title,
-    provider: { "@type": "Organization", name: site.name, url: site.url },
-    url: `${site.url}/services/${service.slug}`,
-    hasOfferCatalog: {
-      "@type": "OfferCatalog",
-      name: service.title,
-      itemListElement: service.items.map((it) => ({
-        "@type": "Offer",
-        itemOffered: { "@type": "Service", name: it.name, description: it.text },
-      })),
-    },
-  };
+  const seo = serviceSeo[service.slug];
+  const path = `/services/${service.slug}`;
+  const crumbs = [
+    { name: "Home", path: "/" },
+    { name: "Services", path: "/services" },
+    { name: service.title, path },
+  ];
+  const description = seo?.description ?? service.summary;
 
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: service.faqs.map((f) => ({
-      "@type": "Question",
-      name: f.q,
-      acceptedAnswer: { "@type": "Answer", text: f.a },
-    })),
-  };
+  const jsonLd = graph(
+    webPageSchema({ path, name: seo?.title ?? service.title, description, breadcrumb: true }),
+    breadcrumbSchema(crumbs),
+    {
+      "@type": "Service",
+      "@id": `${absoluteUrl(path)}#service`,
+      name: seo?.h1 ?? service.title,
+      serviceType: service.title,
+      description: service.intro,
+      url: absoluteUrl(path),
+      provider: { "@id": ORG_ID },
+      areaServed: site.areaServed.map((name) => ({ "@type": "Country", name })),
+      mainEntityOfPage: { "@id": `${absoluteUrl(path)}#webpage` },
+      hasOfferCatalog: {
+        "@type": "OfferCatalog",
+        name: service.title,
+        itemListElement: service.items.map((it) => ({
+          "@type": "Offer",
+          itemOffered: { "@type": "Service", name: it.name, description: it.text },
+        })),
+      },
+    },
+    faqSchema(path, service.faqs),
+  );
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+      <JsonLd data={jsonLd} />
 
       {/* Hero */}
       <section
@@ -116,36 +113,17 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
       >
         <div className="container-x grid gap-12 lg:grid-cols-12 lg:gap-10">
           <Reveal className="lg:col-span-7" stagger={0.08}>
-            <nav data-reveal aria-label="Breadcrumb" className="text-small text-ink/55">
-              <ol className="flex flex-wrap items-center gap-2">
-                <li>
-                  <Link href="/" className="hover:text-ink">
-                    Home
-                  </Link>
-                </li>
-                <li aria-hidden>/</li>
-                <li>
-                  <Link href="/services" className="hover:text-ink">
-                    Services
-                  </Link>
-                </li>
-                <li aria-hidden>/</li>
-                <li aria-current="page" className="text-ink">
-                  {service.title}
-                </li>
-              </ol>
-            </nav>
-            <div data-reveal className="mt-8">
-              <Eyebrow>
-                Service {service.number} · {service.title}
-              </Eyebrow>
+            <div data-reveal>
+              <Breadcrumbs crumbs={crumbs} />
             </div>
-            <h1
-              id="service-title"
-              data-reveal
-              className="heading mt-6 text-[clamp(2.5rem,1.6rem+3.6vw,4.75rem)] leading-[1.02] tracking-tight"
-            >
-              <Accent parts={service.headline} />
+            {/* The H1 carries the search phrase (eyebrow) and the brand headline. */}
+            <h1 id="service-title" data-reveal className="mt-8">
+              <Eyebrow as="span">
+                Service {service.number} · {seo?.h1 ?? service.title}
+              </Eyebrow>{" "}
+              <span className="heading mt-6 block text-[clamp(2.5rem,1.6rem+3.6vw,4.75rem)] leading-[1.02] tracking-tight">
+                <Accent parts={service.headline} />
+              </span>
             </h1>
             <p data-reveal className="mt-8 max-w-xl text-lead leading-relaxed text-ink/75">
               {service.intro}
@@ -321,7 +299,7 @@ export default async function ServicePage({ params }: { params: Promise<Params> 
         <div className="container-x">
           <Reveal>
             <h2 id="related-title">
-              <Eyebrow>Related services</Eyebrow>
+              <Eyebrow as="span">Related services</Eyebrow>
             </h2>
           </Reveal>
           <Reveal as="ul" className="mt-6 grid gap-4 md:grid-cols-3 md:gap-5" stagger={0.08} y={24}>
